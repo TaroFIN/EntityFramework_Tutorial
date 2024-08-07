@@ -1,0 +1,127 @@
+﻿@model ProductVM
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">@(Model.Product.Id!=0?"Update":"Create") Product</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+
+    </div>
+</div>
+<form method="post" class="row" enctype="multipart/form-data">
+    <input asp-for="Product.Id" hidden />
+    <div class="row">
+        <div class="col-10">
+            <div class="border p-3 mt-4">
+                @* <div class="row pb-2">
+                    <h2 class="text-primary">Create Product</h2>
+                </div> *@
+                <div asp-validation-summary=All></div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="Product.Title" class="p-1"></label>
+                    <input asp-for="Product.Title" class="form-control" />
+                    <span asp-validation-for="Product.Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 row p-1">
+                    <label asp-for="Product.ISBN" class="p-1"></label>
+                    <input asp-for="Product.ISBN" class="form-control" />
+                    <span asp-validation-for="Product.ISBN" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="Product.Author" class="p-1"></label>
+                    <input asp-for="Product.Author" class="form-control" />
+                    <span asp-validation-for="Product.Author" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="Product.Description" class="p-1 text-muted"></label>
+                    <textarea asp-for="Product.Description" class="form-control"></textarea>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="Product.ListPrice" class="p-1"></label>
+                    <input asp-for="Product.ListPrice" class="form-control" />
+                    <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="Product.Price" class="p-1"></label>
+                    <input asp-for="Product.Price" class="form-control" />
+                    <span asp-validation-for="Product.Price" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="Product.Price50" class="p-1"></label>
+                    <input asp-for="Product.Price50" class="form-control" />
+                    <span asp-validation-for="Product.Price50" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="Product.Price100" class="p-1"></label>
+                    <input asp-for="Product.Price100" class="form-control" />
+                    <span asp-validation-for="Product.Price100" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <input type="file" name="files" class="form-control border-0 shadow" multiple />
+                    <span asp-validation-for="Product.ProductImages" class="text-danger"></span>
+                </div>
+                <div class="mb-3 row p-1">
+                    <label asp-for="Product.CategoryId" class="p-1"></label>
+                    @* <select asp-for="Product.CategoryId" asp-items="ViewBag.CategoryList" class="form-select border-0 shadow"> *@
+                    @* <select asp-for="Product.CategoryId" asp-items="@ViewData["CategoryList"] as IEnumerable<SelectListItem>" class="form-select border-0 shadow"> *@
+                    <select asp-for="@Model.Product.CategoryId" asp-items="@Model.CategoryList" class="form-select border-0 shadow">
+                        <option disabled selected>-Select Category-</option>
+                    </select>
+                    <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        @if (Model.Product.Id != 0)
+                        {
+                            <button type="submit" class="btn btn-primary border form-control">Update</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary border form-control">Create</button>
+                        }
+                    </div>
+                    <div class="col-6">
+                        <a asp-controller="Product" asp-action="Index" class="btn btn-secondary border form-control">Back to List</a>
+                    </div>
+                </div>
+            </div>
+            
+            @* <div class="col-2">
+                <img src="@Model.Product.ImageUrl" width="100%" style="border-radius:5px; border:1px solid #bbb9b9" />
+            </div> *@
+        </div>
+        <div class="col-2">
+            @if (Model.Product.ProductImages != null)
+            {
+                foreach (var image in Model.Product.ProductImages)
+                {
+                    <div class="border p-1 m-2 text-center">
+                        <img src="@image.ImageUrl" width="100%"
+                             style="border-radius:5px; border:1px solid #bbb9b9" />
+                        <a asp-action="DeleteImage" class="btn btn-danger" asp-route-imageId="@image.Id">
+                        <i class="bi bi-trash-fill"></i>Delete
+                        </a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    
+</form>
+
+@section Scripts{
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate mentions tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+        });
+    </script>
+    @{
+        <partial name="_ValidationScriptsPartial"/>
+    }
+}
